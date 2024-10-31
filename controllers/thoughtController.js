@@ -1,4 +1,5 @@
 const { Thought, User } = require('../models');
+const mongoose = require('mongoose');
 
 const thoughtController = {
   // Get all thoughts
@@ -13,24 +14,28 @@ const thoughtController = {
   },
 
   // Get a single thought by ID
-  async getThoughtById({ params }, res) {
+  async getSingleThought(req, res) {
     try {
-      const dbThoughtData = await Thought.findOne({ _id: params.id });
-      if (!dbThoughtData) {
-        res.status(404).json({ message: 'No thought found with this id!' });
-        return;
-      }
-      res.json(dbThoughtData);
-    } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
+        const dbThoughtData = await Thought.findOne(req.params.thoughtId)
+
+        if (!dbThoughtData) {
+            return res.status(404).json(
+                {
+                    message: 'No thought found.'
+                })
+        
+            }
+
+        res.json(dbThoughtData);
+    } catch (error) {
+        res.status(500).json(error)
     }
-  },
+},
 
   // Create a new thought
-  async createThought({ body }, res) {
+  async createThought(req, res) {
     try {
-      const dbThoughtData = await Thought.create(body);
+      const dbThoughtData = await Thought.create(req.body);
       res.json(dbThoughtData);
     } catch (err) {
       res.status(400).json(err);
@@ -38,9 +43,9 @@ const thoughtController = {
   },
 
   // Delete a thought by ID
-  async deleteThought({ params }, res) {
+  async deleteThought(req, res) {
     try {
-      const dbThoughtData = await Thought.findOneAndDelete({ _id: params.id });
+      const dbThoughtData = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
       if (!dbThoughtData) {
         res.status(404).json({ message: 'No thought found with this id!' });
         return;
@@ -52,10 +57,10 @@ const thoughtController = {
   },
 
   // Update a thought by ID
-  async updateThought({ params, body }, res) {
+  async updateThought(req, res) {
     try {
       const dbThoughtData = await Thought.findOneAndUpdate(
-        { _id: params.id },
+        { _id: req.params.thoughtId },
         body,
         { new: true, runValidators: true }
       );
@@ -70,10 +75,10 @@ const thoughtController = {
   },
 
   // Add a reaction to a thought
-  async addReaction({ params, body }, res) {
+  async addReaction(req, res) {
     try {
       const dbThoughtData = await Thought.findOneAndUpdate(
-        { _id: params.thoughtId },
+        { _id:  req.params.reactionId},
         { $addToSet: { reactions: body } },
         { new: true, runValidators: true }
       );
@@ -88,11 +93,11 @@ const thoughtController = {
   },
 
   // Delete a reaction from a thought
-  async deleteReaction({ params }, res) {
+  async deleteReaction(req, res) {
     try {
       const dbThoughtData = await Thought.findOneAndUpdate(
-        { _id: params.thoughtId },
-        { $pull: { reactions: { reactionId: params.reactionId } } },
+        { _id: req.params.reactionId},
+        { $pull: { reactions: { reactionId:  req.params.reactionId } } },
         { new: true }
       );
       if (!dbThoughtData) {

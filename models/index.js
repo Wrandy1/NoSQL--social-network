@@ -1,7 +1,5 @@
 const User = require('./User');
-const Thought = require('./Thought');
-const Reaction = require('./Reaction');
-router.use('/users', userRoutes);
-router.use('/thoughts', thoughtRoutes);
+const Thought = require('./Thought.js');
 
-module.exports = { User, Thought, Reaction };
+
+module.exports = { User, Thought,};

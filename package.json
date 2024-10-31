@@ -1,15 +1,16 @@
 {
-  "name": "NoSql--social-network",
+  "name": "02-Challenge",
   "version": "1.0.1",
-  "description": "Mongoose back-end project - Develop",
+  "description": "Mongoose back-end project - Main",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "node index",
     "dev": "nodemon index",
-    "seed": "node utils/seed"
+    "seed": "node seed"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.17.1",
     "mongoose": "^8.0.0"
   },
